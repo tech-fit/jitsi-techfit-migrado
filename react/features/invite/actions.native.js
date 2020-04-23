@@ -20,8 +20,7 @@ export * from './actions.any';
 export function doInvitePeople() {
     return (dispatch: Dispatch<any>, getState: Function) => {
         const state = getState();
-        const addPeopleEnabled = getFeatureFlag(state, INVITE_ENABLED, true)
-            && (isAddPeopleEnabled(state) || isDialOutEnabled(state));
+        const addPeopleEnabled = false;
 
         if (addPeopleEnabled) {
             return dispatch(setActiveModalId(ADD_PEOPLE_DIALOG_VIEW_ID));

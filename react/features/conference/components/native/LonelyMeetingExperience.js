@@ -73,33 +73,6 @@ class LonelyMeetingExperience extends PureComponent<Props> {
 
         return (
             <View style = { styles.lonelyMeetingContainer }>
-                <Text
-                    style = { [
-                        styles.lonelyMessage,
-                        _styles.lonelyMessage
-                    ] }>
-                    { t('lonelyMeetingExperience.youAreAlone') }
-                </Text>
-                { !_isInviteFunctionsDiabled && (
-                    <TouchableOpacity
-                        onPress = { this._onPress }
-                        style = { [
-                            styles.lonelyButton,
-                            _styles.lonelyButton
-                        ] }>
-                        <Icon
-                            size = { 24 }
-                            src = { IconAddPeople }
-                            style = { styles.lonelyButtonComponents } />
-                        <Text
-                            style = { [
-                                styles.lonelyButtonComponents,
-                                _styles.lonelyMessage
-                            ] }>
-                            { t('lonelyMeetingExperience.button') }
-                        </Text>
-                    </TouchableOpacity>
-                ) }
             </View>
         );
     }
@@ -124,7 +97,7 @@ class LonelyMeetingExperience extends PureComponent<Props> {
  * @returns {Props}
  */
 function _mapStateToProps(state): $Shape<Props> {
-    const { disableInviteFunctions } = state['features/base/config'];
+    const { disableInviteFunctions } = true;
 
     return {
         _isInviteFunctionsDiabled: disableInviteFunctions,
