@@ -55,13 +55,7 @@ class PrivateMessageMenuButton extends Component<Props> {
             return null;
         }
 
-        return (
-            <RemoteVideoMenuButton
-                buttonText = { t('toolbar.privateMessage') }
-                icon = { IconMessage }
-                id = { `privmsglink_${participantID}` }
-                onClick = { this._onClick } />
-        );
+        return null;
     }
 
     _onClick: () => void;

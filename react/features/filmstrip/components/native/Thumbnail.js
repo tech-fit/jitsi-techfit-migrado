@@ -229,9 +229,9 @@ function _mapDispatchToProps(dispatch: Function, ownProps): Object {
         _onShowRemoteVideoMenu() {
             const { participant } = ownProps;
 
-            dispatch(openDialog(RemoteVideoMenu, {
-                participant
-            }));
+            // dispatch(openDialog(RemoteVideoMenu, {
+            //     participant
+            // }));
         }
     };
 }
