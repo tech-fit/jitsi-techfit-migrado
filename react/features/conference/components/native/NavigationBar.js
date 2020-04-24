@@ -54,16 +54,9 @@ class NavigationBar extends Component<Props> {
                 key = { 2 }
                 pointerEvents = 'box-none'
                 style = { styles.navBarWrapper }>
-                <PictureInPictureButton
-                    styles = { styles.navBarButton } />
                 <View
                     pointerEvents = 'box-none'
                     style = { styles.roomNameWrapper }>
-                    <Text
-                        numberOfLines = { 1 }
-                        style = { styles.roomName }>
-                        { this.props._meetingName }
-                    </Text>
                     <ConferenceTimer />
                 </View>
             </View>
