@@ -22,6 +22,7 @@
 #import "JitsiMeetView+Private.h"
 #import "RCTBridgeWrapper.h"
 #import "ReactUtils.h"
+#import "RNSplashScreen.h"
 
 #import <RNGoogleSignin/RNGoogleSignin.h>
 #import <WebRTC/RTCLogging.h>
@@ -107,7 +108,7 @@
     JitsiMeetConferenceOptions *conferenceOptions = [JitsiMeetConferenceOptions fromBuilder:^(JitsiMeetConferenceOptionsBuilder *builder) {
         builder.room = [url absoluteString];
     }];
-    
+
     return [JitsiMeetView setPropsInViews:[conferenceOptions asProps]];
 }
 
@@ -130,6 +131,11 @@
     }
 
     return nil;
+}
+
+- (BOOL)isCrashReportingDisabled {
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"jitsi-default-preferences"];
+    return [userDefaults stringForKey:@"isCrashReportingDisabled"];
 }
 
 - (JitsiMeetConferenceOptions *)optionsFromUserActivity:(NSUserActivity *)userActivity {
@@ -176,6 +182,10 @@
     }
 
     return nil;
+}
+
+- (void)showSplashScreen:(UIView*)rootView {
+    [RNSplashScreen showSplash:@"LaunchScreen" inRootView:rootView];
 }
 
 #pragma mark - Property getter / setters

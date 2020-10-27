@@ -4,7 +4,6 @@ import { StyleSheet } from 'react-native';
 
 import { ColorSchemeRegistry, schemeColor } from '../../../color-scheme';
 import { BoxModel, ColorPalette } from '../../../styles';
-
 import { PREFERRED_DIALOG_SIZE } from '../../constants';
 
 const BORDER_RADIUS = 5;
@@ -173,9 +172,7 @@ ColorSchemeRegistry.register('BottomSheet', {
     },
 
     expandIcon: {
-        color: schemeColor('icon'),
-        fontSize: 48,
-        opacity: 0.8
+        color: schemeColor('icon')
     },
 
     /**

@@ -3,7 +3,7 @@ import extraConfigWhitelist from './extraConfigWhitelist';
 /**
  * The config keys to whitelist, the keys that can be overridden.
  * Currently we can only whitelist the first part of the properties, like
- * 'p2p.useStunTurn' and 'p2p.enabled' we whitelist all p2p options.
+ * 'p2p.enabled' we whitelist all p2p options.
  * The whitelist is used only for config.js.
  *
  * @type Array
@@ -15,8 +15,7 @@ export default [
     'abTesting',
     'analytics.disabled',
     'audioLevelsInterval',
-    'autoRecord',
-    'autoRecordToken',
+    'apiLogLevels',
     'avgRtpStatsN',
 
     /**
@@ -69,14 +68,10 @@ export default [
 
     'channelLastN',
     'constraints',
+    'brandingRoomAlias',
     'debug',
     'debugAudioLevels',
     'defaultLanguage',
-    'desktopSharingChromeDisabled',
-    'desktopSharingChromeExtId',
-    'desktopSharingChromeMinExtVersion',
-    'desktopSharingChromeSources',
-    'desktopSharingFirefoxDisabled',
     'desktopSharingFrameRate',
     'desktopSharingSources',
     'disable1On1Mode',
@@ -101,14 +96,18 @@ export default [
     'e2eping',
     'enableDisplayNameInStats',
     'enableEmailInStats',
+    'enableIceRestart',
+    'enableInsecureRoomNameWarning',
     'enableLayerSuspension',
     'enableLipSync',
+    'enableOpusRed',
     'enableRemb',
     'enableScreenshotCapture',
     'enableTalkWhileMuted',
     'enableNoAudioDetection',
     'enableNoisyMicDetection',
     'enableTcc',
+    'enableAutomaticUrlCopy',
     'etherpad_base',
     'failICE',
     'feedbackPercentage',
@@ -118,6 +117,7 @@ export default [
     'gatherStats',
     'googleApiApplicationClientID',
     'hiddenDomain',
+    'hideLobbyButton',
     'hosts',
     'iAmRecorder',
     'iAmSipGateway',
@@ -125,14 +125,18 @@ export default [
     'ignoreStartMuted',
     'liveStreamingEnabled',
     'localRecording',
+    'maxFullResolutionParticipants',
     'minParticipants',
     'nick',
     'openBridgeChannel',
+    'opusMaxAverageBitrate',
     'p2p',
     'pcStatsInterval',
     'preferH264',
+    'prejoinPageEnabled',
     'requireDisplayName',
     'remoteVideoMenu',
+    'roomPasswordNumberOfDigits',
     'resolution',
     'startAudioMuted',
     'startAudioOnly',
@@ -145,9 +149,8 @@ export default [
     'stereo',
     'subject',
     'testing',
-    'useIPv6',
-    'useNicks',
-    'useStunTurn',
+    'useTurnUdp',
+    'videoQuality.persist',
     'webrtcIceTcpDisable',
     'webrtcIceUdpDisable'
 ].concat(extraConfigWhitelist);

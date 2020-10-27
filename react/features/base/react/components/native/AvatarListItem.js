@@ -5,7 +5,6 @@ import { Text } from 'react-native';
 
 import { Avatar } from '../../../avatar';
 import { StyleType } from '../../../styles';
-
 import { type Item } from '../../Types';
 
 import Container from './Container';
@@ -54,6 +53,11 @@ type Props = {
     linesStyle?: StyleType,
 
     /**
+     * Function to invoke on long press.
+     */
+    onLongPress: ?Function,
+
+    /**
      * Function to invoke on press.
      */
     onPress: ?Function,
@@ -89,13 +93,16 @@ export default class AvatarListItem extends Component<Props> {
             avatarOnly,
             avatarSize = AVATAR_SIZE,
             avatarStatus,
-            avatarStyle
+            avatarStyle,
+            onLongPress,
+            onPress
         } = this.props;
         const { avatar, colorBase, lines, title } = this.props.item;
 
         return (
             <Container
-                onClick = { this.props.onPress }
+                onClick = { onPress }
+                onLongPress = { onLongPress }
                 style = { styles.listItem }
                 underlayColor = { UNDERLAY_COLOR }>
                 <Avatar

@@ -64,8 +64,6 @@ export default class JitsiStreamPresenterEffect {
 
         // Bind event handler so it is only bound once for every instance.
         this._onVideoFrameTimer = this._onVideoFrameTimer.bind(this);
-        this._videoFrameTimerWorker = new Worker(timerWorkerScript);
-        this._videoFrameTimerWorker.onmessage = this._onVideoFrameTimer;
     }
 
     /**
@@ -136,12 +134,21 @@ export default class JitsiStreamPresenterEffect {
         this._desktopElement.srcObject = desktopStream;
         this._canvas.width = parseInt(width, 10);
         this._canvas.height = parseInt(height, 10);
+        this._videoFrameTimerWorker = new Worker(timerWorkerScript, { name: 'Presenter effect worker' });
+        this._videoFrameTimerWorker.onmessage = this._onVideoFrameTimer;
         this._videoFrameTimerWorker.postMessage({
             id: SET_INTERVAL,
             timeMs: 1000 / this._frameRate
         });
 
-        return this._canvas.captureStream(this._frameRate);
+        const capturedStream = this._canvas.captureStream(this._frameRate);
+
+        // Put emphasis on the text details for the presenter's stream
+        // See https://www.w3.org/TR/mst-content-hint/
+        // $FlowExpectedError
+        capturedStream.getVideoTracks()[0].contentHint = 'text';
+
+        return capturedStream;
     }
 
     /**
@@ -153,6 +160,7 @@ export default class JitsiStreamPresenterEffect {
         this._videoFrameTimerWorker.postMessage({
             id: CLEAR_INTERVAL
         });
+        this._videoFrameTimerWorker.terminate();
     }
 
 }

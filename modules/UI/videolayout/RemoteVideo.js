@@ -1,20 +1,24 @@
 /* global $, APP, interfaceConfig */
 
 /* eslint-disable no-unused-vars */
+import { AtlasKitThemeProvider } from '@atlaskit/theme';
+import Logger from 'jitsi-meet-logger';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import { I18nextProvider } from 'react-i18next';
-import { AtlasKitThemeProvider } from '@atlaskit/theme';
+import { Provider } from 'react-redux';
 
 import { i18next } from '../../../react/features/base/i18n';
 import {
     JitsiParticipantConnectionStatus
 } from '../../../react/features/base/lib-jitsi-meet';
+import { MEDIA_TYPE } from '../../../react/features/base/media';
 import {
+    getParticipantById,
     getPinnedParticipant,
     pinParticipant
 } from '../../../react/features/base/participants';
+import { isRemoteTrackMuted } from '../../../react/features/base/tracks';
 import { PresenceLabel } from '../../../react/features/presence-status';
 import {
     REMOTE_CONTROL_MENU_STATES,
@@ -22,12 +26,11 @@ import {
 } from '../../../react/features/remote-video-menu';
 import { LAYOUTS, getCurrentLayout } from '../../../react/features/video-layout';
 /* eslint-enable no-unused-vars */
-
-const logger = require('jitsi-meet-logger').getLogger(__filename);
-
+import UIUtils from '../util/UIUtil';
 
 import SmallVideo from './SmallVideo';
-import UIUtils from '../util/UIUtil';
+
+const logger = Logger.getLogger(__filename);
 
 /**
  *
@@ -86,7 +89,6 @@ export default class RemoteVideo extends SmallVideo {
         this.bindHoverHandler();
         this.flipX = false;
         this.isLocal = false;
-        this.popupMenuIsHovered = false;
         this._isRemoteControlSessionActive = false;
 
         /**
@@ -135,17 +137,6 @@ export default class RemoteVideo extends SmallVideo {
         this.addPresenceLabel();
 
         return this.container;
-    }
-
-    /**
-     * Checks whether current video is considered hovered. Currently it is hovered
-     * if the mouse is over the video, or if the connection indicator or the popup
-     * menu is shown(hovered).
-     * @private
-     * NOTE: extends SmallVideo's method
-     */
-    _isHovered() {
-        return super._isHovered() || this.popupMenuIsHovered;
     }
 
     /**
@@ -207,7 +198,6 @@ export default class RemoteVideo extends SmallVideo {
                     <AtlasKitThemeProvider mode = 'dark'>
                         <RemoteVideoMenuTriggerButton
                             initialVolumeValue = { initialVolumeValue }
-                            isAudioMuted = { this.isAudioMuted }
                             menuPosition = { remoteMenuPosition }
                             onMenuDisplay
                                 = {this._onRemoteVideoMenuDisplay.bind(this)}
@@ -311,22 +301,16 @@ export default class RemoteVideo extends SmallVideo {
 
     /**
      * Updates the remote video menu.
-     *
-     * @param isMuted the new muted state to update to
      */
-    updateRemoteVideoMenu(isMuted) {
-        if (typeof isMuted !== 'undefined') {
-            this.isAudioMuted = isMuted;
-        }
+    updateRemoteVideoMenu() {
         this._generatePopupContent();
     }
 
     /**
-     * @inheritDoc
-     * @override
+     * Video muted status changed handler.
      */
-    setVideoMutedView(isMuted) {
-        super.setVideoMutedView(isMuted);
+    onVideoMute() {
+        super.updateView();
 
         // Update 'mutedWhileDisconnected' flag
         this._figureOutMutedWhileDisconnected();
@@ -340,10 +324,12 @@ export default class RemoteVideo extends SmallVideo {
      */
     _figureOutMutedWhileDisconnected() {
         const isActive = this.isConnectionActive();
+        const isVideoMuted
+            = isRemoteTrackMuted(APP.store.getState()['features/base/tracks'], MEDIA_TYPE.VIDEO, this.id);
 
-        if (!isActive && this.isVideoMuted) {
+        if (!isActive && isVideoMuted) {
             this.mutedWhileDisconnected = true;
-        } else if (isActive && !this.isVideoMuted) {
+        } else if (isActive && !isVideoMuted) {
             this.mutedWhileDisconnected = false;
         }
     }
@@ -456,14 +442,16 @@ export default class RemoteVideo extends SmallVideo {
             return;
         }
 
-        streamElement.oncanplay = () => {
+        const listener = () => {
             this._canPlayEventReceived = true;
             this.VideoLayout.remoteVideoActive(streamElement, this.id);
-            streamElement.oncanplay = undefined;
+            streamElement.removeEventListener('canplay', listener);
 
             // Refresh to show the video
             this.updateView();
         };
+
+        streamElement.addEventListener('canplay', listener);
     }
 
     /**
@@ -479,7 +467,11 @@ export default class RemoteVideo extends SmallVideo {
 
         const isVideo = stream.isVideoTrack();
 
-        isVideo ? this.videoStream = stream : this.audioStream = stream;
+        if (isVideo) {
+            this.videoStream = stream;
+        } else {
+            this.audioStream = stream;
+        }
 
         if (!stream.getOriginalStream()) {
             logger.debug('Remote video stream has no original stream');

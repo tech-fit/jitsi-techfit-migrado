@@ -10,7 +10,7 @@ import {
     _mapStateToProps as _abstractMapStateToProps,
     type Props as AbstractProps
 } from '../../../chat/components/PrivateMessageButton';
-import { isButtonEnabled } from '../../../toolbox';
+import { isButtonEnabled } from '../../../toolbox/functions.web';
 
 import RemoteVideoMenuButton from './RemoteVideoMenuButton';
 
@@ -55,7 +55,13 @@ class PrivateMessageMenuButton extends Component<Props> {
             return null;
         }
 
-        return null;
+        return (
+            <RemoteVideoMenuButton
+                buttonText = { t('toolbar.privateMessage') }
+                icon = { IconMessage }
+                id = { `privmsglink_${participantID}` }
+                onClick = { this._onClick } />
+        );
     }
 
     _onClick: () => void;

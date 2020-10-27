@@ -2,16 +2,15 @@
 
 import React, { Component } from 'react';
 
-import { appNavigate } from '../../app';
 import {
     createCalendarClickedEvent,
     createCalendarSelectedEvent,
     sendAnalytics
 } from '../../analytics';
+import { appNavigate } from '../../app/actions';
 import { getLocalizedDateFormatter, translate } from '../../base/i18n';
 import { NavigateSectionList } from '../../base/react';
 import { connect } from '../../base/redux';
-
 import { refreshCalendar, openUpdateCalendarEventDialog } from '../actions';
 
 
@@ -107,7 +106,7 @@ class CalendarListContent extends Component<Props> {
         );
     }
 
-    _onPress: (string, ?string) => Function;
+    _onPress: (string, ?string) => void;
 
     /**
      * Handles the list's navigate action.
@@ -260,9 +259,7 @@ class CalendarListContent extends Component<Props> {
  * Maps redux state to component props.
  *
  * @param {Object} state - The redux state.
- * @returns {{
- *     _eventList: Array<Object>
- * }}
+ * @returns {Props}
  */
 function _mapStateToProps(state: Object) {
     return {

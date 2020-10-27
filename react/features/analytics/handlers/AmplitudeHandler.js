@@ -65,4 +65,22 @@ export default class AmplitudeHandler extends AbstractHandler {
             this._extractName(event),
             event);
     }
+
+    /**
+     * Return amplitude identity information.
+     *
+     * @returns {Object}
+     */
+    getIdentityProps() {
+        // TODO: Remove when web and native Aplitude implementations are unified.
+        if (navigator.product === 'ReactNative') {
+            return {};
+        }
+
+        return {
+            sessionId: amplitude.getInstance(this._amplitudeOptions).getSessionId(),
+            deviceId: amplitude.getInstance(this._amplitudeOptions).options.deviceId,
+            userId: amplitude.getInstance(this._amplitudeOptions).options.userId
+        };
+    }
 }
